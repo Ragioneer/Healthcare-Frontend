@@ -1,24 +1,87 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+'use client';
 
-export default function SignUpPage() {
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import axios from 'axios';
+
+export default function SignupPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [status, setStatus] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSignup = async () => {
+    if (!email || !password) {
+      setStatus('❌ Please fill in all fields');
+      return;
+    }
+
+    setIsLoading(true);
+    setStatus('⏳ Creating your account...');
+
+    try {
+      console.log('Attempting signup with:', { email });
+      const res = await axios.post('http://localhost:8000/auth/signup', {
+        email,
+        password,
+      });
+      console.log('Signup response:', res.data);
+
+      setStatus('✅ Signup successful! Redirecting to login...');
+      setTimeout(() => router.push('/login'), 2000);
+    } catch (err: any) {
+      console.error('Signup error:', err);
+      setStatus(`❌ ${err.response?.data?.detail || 'Signup failed. Please try again.'}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md p-8">
-        <h1 className="text-2xl font-bold mb-6 text-center">Create Your Account</h1>
-        <p className="text-sm text-center text-gray-500 mb-6">
-          Sign up using your email or one of the providers below.
-        </p>
-        <CardContent className="flex flex-col gap-4">
-          <Input placeholder="Email" type="email" />
-          <Input placeholder="Password" type="password" />
-          <Button className="w-full">Sign Up</Button>
-          <div className="flex flex-col gap-2 mt-4">
-            <Button variant="outline" className="w-full">Sign up with Google</Button>
-            <Button variant="outline" className="w-full">Sign up with LinkedIn</Button>
-            <Button variant="outline" className="w-full">Sign up with GitHub</Button>
+    <div className="min-h-screen bg-gray-50 p-8">
+      <Card className="max-w-xl mx-auto p-6">
+        <h2 className="text-xl font-bold mb-4">Create an Account</h2>
+        <CardContent className="space-y-4">
+          <div>
+            <Label>Email</Label>
+            <Input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="user@example.com"
+              disabled={isLoading}
+            />
           </div>
+
+          <div>
+            <Label>Password</Label>
+            <Input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="********"
+              disabled={isLoading}
+            />
+          </div>
+
+          <Button 
+            onClick={handleSignup} 
+            className="w-full"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Creating Account...' : 'Register'}
+          </Button>
+
+          {status && (
+            <p className={`text-sm text-center mt-2 ${status.includes('❌') ? 'text-red-600' : 'text-blue-600'}`}>
+              {status}
+            </p>
+          )}
         </CardContent>
       </Card>
     </div>
