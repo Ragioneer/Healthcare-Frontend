@@ -1,4 +1,3 @@
-// app/admin/page.tsx
 'use client';
 
 import { useState } from "react";
@@ -20,15 +19,13 @@ export default function AdminPanelPage() {
     prompt: "",
     temperature: 0.7,
     max_tokens: 400,
-    model: "gpt-4"
+    model: "gpt-4o"
   });
 
   const uploadDocs = async () => {
     if (!files) return;
     const formData = new FormData();
-    Array.from(files).forEach((file) => {
-      formData.append("files", file);
-    });
+    Array.from(files).forEach((file) => formData.append("files", file));
     formData.append("user_id", userId);
 
     try {
@@ -46,9 +43,7 @@ export default function AdminPanelPage() {
       formData.append("user_id", userId);
 
       await axios.post("http://localhost:8000/ingest/url", formData, {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
       });
 
       setStatus("✅ URL content ingested");
@@ -67,17 +62,17 @@ export default function AdminPanelPage() {
   };
 
   const fetchData = async (type: string) => {
-    try {
-      const endpointMap: Record<string, string> = {
-        files: `http://localhost:8000/ingest/file-logs?user_id=${userId}`,
-        urls: `http://localhost:8000/ingest/url-logs?user_id=${userId}`,
-        chats: "http://localhost:8000/chat/history",
-        appointments: `http://localhost:8000/doctors/appointments?user_id=${userId}`,
-        reception: `http://localhost:8000/reception/request?user_id=${userId}`,
-        exams: `http://localhost:8000/exam/schedule?user_id=${userId}`,
-        quotations: `http://localhost:8000/quote/request?user_id=${userId}`
-      };
+    const endpointMap: Record<string, string> = {
+      files: `http://localhost:8000/ingest/file-logs?user_id=${userId}`,
+      urls: `http://localhost:8000/ingest/url-logs?user_id=${userId}`,
+      chats: "http://localhost:8000/chat/history",
+      appointments: `http://localhost:8000/doctors/appointments?user_id=${userId}`,
+      reception: `http://localhost:8000/reception/request?user_id=${userId}`,
+      exams: `http://localhost:8000/exam/schedule?user_id=${userId}`,
+      quotations: `http://localhost:8000/quote/request?user_id=${userId}`
+    };
 
+    try {
       const res = await axios.get(endpointMap[type]);
       setResultData(res.data);
       setStatus(`✅ ${type} data fetched`);
@@ -87,63 +82,58 @@ export default function AdminPanelPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <Card className="max-w-3xl mx-auto p-6 shadow-md">
-        <h2 className="text-2xl font-bold mb-4">Admin Control Panel</h2>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white p-6 sm:p-10 flex justify-center items-start">
+      <Card className="w-full max-w-4xl p-6 sm:p-8 rounded-2xl shadow-xl bg-white">
+        <h2 className="text-2xl font-bold text-blue-700 text-center mb-6">🛠 Admin Control Panel</h2>
 
-        <div className="mb-6">
-          {/* <Label>User ID</Label>
-          <Input
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-            placeholder="Enter user_id (e.g. user-123)"
-          /> */}
-        </div>
-
-        <div className="flex flex-wrap gap-3 mb-6">
+        <div className="flex justify-center gap-3 flex-wrap mb-8">
           {["upload", "url", "llm", "data"].map((t) => (
             <Button
               key={t}
               variant={tab === t ? "default" : "outline"}
+              className="rounded-full"
               onClick={() => setTab(t)}
             >
-              {t === "upload"
-                ? "Upload File"
-                : t === "url"
-                ? "Ingest URL"
-                : t === "llm"
-                ? "LLM Settings"
-                : "Data Viewer"}
+              {{
+                upload: "📤 Upload File",
+                url: "🌐 Ingest URL",
+                llm: "🧠 LLM Settings",
+                data: "📊 Data Viewer",
+              }[t]}
             </Button>
           ))}
         </div>
 
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
           {tab === "upload" && (
             <>
-              <Label>Upload Medical Docs</Label>
+              <Label className="font-semibold">Upload Medical Files</Label>
               <Input type="file" multiple onChange={(e) => setFiles(e.target.files)} />
-              <Button onClick={uploadDocs}>Upload</Button>
+              <Button className="mt-2 w-full" onClick={uploadDocs}>Upload</Button>
             </>
           )}
 
           {tab === "url" && (
             <>
-              <Label>Paste URL to Ingest</Label>
-              <Input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://..." />
-              <Button onClick={ingestURL}>Ingest</Button>
+              <Label className="font-semibold">Ingest from URL</Label>
+              <Input
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="https://example.com/article"
+              />
+              <Button className="mt-2 w-full" onClick={ingestURL}>Ingest</Button>
             </>
           )}
 
           {tab === "llm" && (
             <>
-              <Label>Model</Label>
+              <Label className="font-semibold">Model</Label>
               <Input value={llmSettings.model} onChange={(e) => setLLMSettings({ ...llmSettings, model: e.target.value })} />
 
-              <Label>Prompt</Label>
+              <Label className="font-semibold">System Prompt</Label>
               <Input value={llmSettings.prompt} onChange={(e) => setLLMSettings({ ...llmSettings, prompt: e.target.value })} />
 
-              <Label>Temperature</Label>
+              <Label className="font-semibold">Temperature</Label>
               <Input
                 type="number"
                 step="0.1"
@@ -151,51 +141,52 @@ export default function AdminPanelPage() {
                 onChange={(e) => setLLMSettings({ ...llmSettings, temperature: parseFloat(e.target.value) })}
               />
 
-              <Label>Max Tokens</Label>
+              <Label className="font-semibold">Max Tokens</Label>
               <Input
                 type="number"
                 value={llmSettings.max_tokens}
                 onChange={(e) => setLLMSettings({ ...llmSettings, max_tokens: parseInt(e.target.value) })}
               />
 
-              <Button onClick={updateLLM}>Update LLM</Button>
+              <Button className="mt-2 w-full" onClick={updateLLM}>Update Settings</Button>
             </>
           )}
 
           {tab === "data" && (
             <>
-            <div className="space-y-4">
-            <Label>User ID</Label>
-            <Input
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
-          placeholder="Enter user_id (e.g. user-123)"
-        />
-        </div>
-              <h3 className="font-semibold">Ingested Data</h3>
-              <div className="grid grid-cols-3 gap-2">
-                <Button onClick={() => fetchData("files")}>Files</Button>
-                <Button onClick={() => fetchData("urls")}>URLs</Button>
-                <Button onClick={() => fetchData("chats")}>Chats</Button>
+              <div>
+                <Label className="font-semibold">User ID</Label>
+                <Input
+                  value={userId}
+                  onChange={(e) => setUserId(e.target.value)}
+                  placeholder="e.g. user-123"
+                />
               </div>
 
-              <h3 className="font-semibold mt-6">User Requests</h3>
-              <div className="grid grid-cols-2 gap-2">
-                <Button onClick={() => fetchData("appointments")}>Appointments</Button>
-                <Button onClick={() => fetchData("reception")}>Reception</Button>
-                <Button onClick={() => fetchData("exams")}>Exams</Button>
-                <Button onClick={() => fetchData("quotations")}>Quotations</Button>
+              <h3 className="text-lg font-semibold mt-4">Ingested Data</h3>
+              <div className="grid grid-cols-3 gap-3">
+                <Button onClick={() => fetchData("files")}>📁 Files</Button>
+                <Button onClick={() => fetchData("urls")}>🔗 URLs</Button>
+                <Button onClick={() => fetchData("chats")}>💬 Chats</Button>
+              </div>
+
+              <h3 className="text-lg font-semibold mt-6">User Requests</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <Button onClick={() => fetchData("appointments")}>📅 Appointments</Button>
+                <Button onClick={() => fetchData("reception")}>🧑‍💼 Reception</Button>
+                <Button onClick={() => fetchData("exams")}>🧪 Exams</Button>
+                <Button onClick={() => fetchData("quotations")}>📄 Quotations</Button>
               </div>
 
               {resultData && (
-                <pre className="bg-gray-100 p-3 rounded overflow-x-auto text-sm mt-4">
+                <pre className="bg-gray-100 p-4 rounded mt-4 max-h-[400px] overflow-auto text-sm whitespace-pre-wrap">
                   {JSON.stringify(resultData, null, 2)}
                 </pre>
               )}
             </>
           )}
 
-          {status && <p className="text-blue-600 mt-4">{status}</p>}
+          {status && <div className="text-center text-blue-600 font-medium">{status}</div>}
         </CardContent>
       </Card>
     </div>

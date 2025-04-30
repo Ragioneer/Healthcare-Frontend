@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,6 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
+import { getUserEmailFromToken } from "@/lib/auth"; // near top
+
+const user_id = getUserEmailFromToken(); // before calling apiPost
 
 interface Doctor {
   id: string;
@@ -46,7 +49,7 @@ export default function AppointmentsPage() {
 
     try {
       const payload = {
-        user_id: "user-123", // TODO: Replace with dynamic user input later
+        user_id: user_id,
         doctor_id: selectedDoctor,
         datetime: new Date(datetime).toISOString(),
         purpose,
@@ -57,7 +60,9 @@ export default function AppointmentsPage() {
         payload
       );
 
-      setConfirmation(`✅ Appointment booked with ${res.data.doctor_id} at ${res.data.datetime}`);
+      setConfirmation(
+        `✅ Appointment booked with Dr. ${selectedDoctor} at ${new Date(res.data.datetime).toLocaleString()}`
+      );
     } catch (error) {
       console.error(error);
       setConfirmation("❌ Booking failed. Please try again.");
@@ -65,14 +70,14 @@ export default function AppointmentsPage() {
   };
 
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
-      <Card className="max-w-xl mx-auto p-6 shadow-md">
-        <h2 className="text-xl font-bold mb-4">Schedule an Appointment</h2>
-        <CardContent className="space-y-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white p-6 sm:p-10 flex justify-center items-start">
+      <Card className="w-full max-w-2xl p-6 sm:p-8 rounded-2xl shadow-xl bg-white">
+        <h2 className="text-2xl font-bold text-blue-700 text-center mb-6">📅 Schedule Appointment</h2>
+        <CardContent className="space-y-5">
           <div>
-            <Label>Select Doctor</Label>
+            <Label className="text-sm font-semibold">Select Doctor</Label>
             <select
-              className="w-full border rounded p-2 mt-1"
+              className="w-full mt-1 p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={selectedDoctor}
               onChange={(e) => setSelectedDoctor(e.target.value)}
             >
@@ -86,29 +91,36 @@ export default function AppointmentsPage() {
           </div>
 
           <div>
-            <Label>Date & Time</Label>
+            <Label className="text-sm font-semibold">Date & Time</Label>
             <Input
               type="datetime-local"
+              className="rounded-lg mt-1"
               value={datetime}
               onChange={(e) => setDatetime(e.target.value)}
             />
           </div>
 
           <div>
-            <Label>Purpose</Label>
+            <Label className="text-sm font-semibold">Purpose</Label>
             <Input
-              placeholder="e.g. Chest pain"
+              className="rounded-lg mt-1"
+              placeholder="e.g. Chest pain, follow-up visit..."
               value={purpose}
               onChange={(e) => setPurpose(e.target.value)}
             />
           </div>
 
-          <Button onClick={handleBook} className="w-full">
+          <Button
+            onClick={handleBook}
+            className="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg"
+          >
             Confirm Booking
           </Button>
 
           {confirmation && (
-            <p className="mt-4 text-sm text-center text-blue-700">{confirmation}</p>
+            <div className="text-center text-sm mt-4 text-blue-700">
+              {confirmation}
+            </div>
           )}
         </CardContent>
       </Card>

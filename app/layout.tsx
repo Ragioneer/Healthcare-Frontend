@@ -1,27 +1,43 @@
+// app/layout.tsx
 import "./globals.css";
 import { ReactNode } from "react";
 import Link from "next/link";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <body className="flex">
+    <html lang="en" className="bg-background text-foreground">
+      <body className="flex min-h-screen font-sans antialiased">
         {/* Sidebar */}
-        <div className="w-64 min-h-screen bg-blue-100 p-4 space-y-4">
-          <h2 className="text-xl font-bold">Chatgpt Style Medical Chat</h2>
-          <nav className="flex flex-col space-y-2">
-            <Link href="/chat">Chat</Link>
-            <Link href="/appointments">Schedule an Appointment</Link>
-            <Link href="/reception">Connect to a Receptionist</Link>
-            <Link href="/exams">Schedule an Exam</Link>
-            <Link href="/quote">Request a Quotation</Link>
-            <Link href="/admin">Admin Panel</Link>
+        <aside className="w-64 bg-white text-gray-800 dark:bg-blue-950 dark:text-white border-r border-gray-200 dark:border-blue-800 p-6 flex flex-col gap-6">
+          <div className="text-2xl font-extrabold text-blue-600 dark:text-white">
+            MediQuick AI
+          </div>
+          <nav className="flex flex-col gap-3">
+            <SidebarLink href="/chat" label="🧠 Chat" />
+            <SidebarLink href="/appointments" label="📅 Schedule Appointment" />
+            <SidebarLink href="/reception" label="💬 Talk to Receptionist" />
+            <SidebarLink href="/exams" label="🧪 Book Lab Exam" />
+            <SidebarLink href="/quote" label="📄 Get Quotation" />
+            <SidebarLink href="/admin" label="🛠 Admin Panel" />
           </nav>
-        </div>
+        </aside>
 
-        {/* Main View */}
-        <div className="flex-1 p-6 bg-gray-50">{children}</div>
+        {/* Main Content */}
+        <main className="flex-1 p-6 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white overflow-y-auto">
+          {children}
+        </main>
       </body>
     </html>
+  );
+}
+
+function SidebarLink({ href, label }: { href: string; label: string }) {
+  return (
+    <Link
+      href={href}
+      className="px-3 py-2 rounded-md hover:bg-blue-100 dark:hover:bg-blue-800 transition text-sm font-medium"
+    >
+      {label}
+    </Link>
   );
 }

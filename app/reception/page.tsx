@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import axios from "axios";
+import { getUserEmailFromToken } from "@/lib/auth"; // near top
+
+const user_id = getUserEmailFromToken(); // before calling apiPost
 
 export default function ReceptionPage() {
   const [name, setName] = useState("");
@@ -14,8 +17,13 @@ export default function ReceptionPage() {
   const [confirmation, setConfirmation] = useState("");
 
   const handleSubmit = async () => {
+    if (!name || !phone || !reason) {
+      setConfirmation("❌ Please fill in all fields.");
+      return;
+    }
+
     const payload = {
-      user_id: "user1", // Temporary static user
+      user_id: user_id, // Temporary static user
       name,
       phone,
       reason,
@@ -31,24 +39,50 @@ export default function ReceptionPage() {
   };
 
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
-      <Card className="max-w-xl mx-auto p-6">
-        <h2 className="text-xl font-bold mb-4">Connect to a Human Receptionist</h2>
-        <CardContent className="space-y-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white p-6 sm:p-10 flex justify-center items-start">
+      <Card className="w-full max-w-2xl p-6 sm:p-8 rounded-2xl shadow-xl bg-white">
+        <h2 className="text-2xl font-bold text-blue-700 text-center mb-6">💬 Connect to a Human Receptionist</h2>
+        <CardContent className="space-y-5">
           <div>
-            <Label>Purpose of Request</Label>
-            <Input value={reason} onChange={(e) => setReason(e.target.value)} placeholder="e.g. Urgent help" />
+            <Label className="text-sm font-semibold">Purpose of Request</Label>
+            <Input
+              placeholder="e.g. Urgent help"
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              className="rounded-lg mt-1"
+            />
           </div>
           <div>
-            <Label>Phone Number</Label>
-            <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+92XXXXXXXXXX" />
+            <Label className="text-sm font-semibold">Phone Number</Label>
+            <Input
+              placeholder="+92XXXXXXXXXX"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="rounded-lg mt-1"
+            />
           </div>
           <div>
-            <Label>Your Name</Label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your full name" />
+            <Label className="text-sm font-semibold">Your Name</Label>
+            <Input
+              placeholder="Your full name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="rounded-lg mt-1"
+            />
           </div>
-          <Button onClick={handleSubmit}>Submit Request</Button>
-          {confirmation && <p className="mt-4 text-green-600">{confirmation}</p>}
+
+          <Button
+            onClick={handleSubmit}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg mt-2"
+          >
+            Submit Request
+          </Button>
+
+          {confirmation && (
+            <div className="text-center mt-4 text-blue-700 text-sm font-medium">
+              {confirmation}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
