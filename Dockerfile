@@ -1,17 +1,29 @@
 # -------- STAGE 1: Build --------
     FROM node:18-alpine AS builder
-
+ 
     WORKDIR /app
     
-    # Copy package files
     COPY package*.json ./
+    RUN npm install
     
-    # ✅ Install all deps including devDependencies like tailwindcss
-    RUN npm install --legacy-peer-deps --include=dev
-    
-    # Copy source code
     COPY . .
+    RUN npm run build
     
-    # Build the app
-    RUN npm run dev
+    
+    # -------- STAGE 2: Production Server --------
+    FROM node:18-alpine AS runner
+    
+    WORKDIR /app
+    
+    ENV NODE_ENV=production
+    
+    # Copy only necessary output files
+    COPY --from=builder /app/.next ./.next
+    COPY --from=builder /app/public ./public
+    COPY --from=builder /app/package.json ./package.json
+    COPY --from=builder /app/node_modules ./node_modules
+    
+    EXPOSE 3000
+    
+    CMD ["npm", "start"]
     
