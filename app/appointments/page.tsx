@@ -51,6 +51,12 @@ export default function AppointmentsPage() {
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setConfirmation("❌ Invalid email format.");
+      return;
+    }
+
     try {
       const payload = {
         user_id,
@@ -61,13 +67,12 @@ export default function AppointmentsPage() {
         email,
         phone,
         gender,
-        birthdate,
+        birthdate: new Date(birthdate).toISOString(),
         appointment_type: appointmentType,
-        notes
+        notes: notes || "N/A"
       };
 
-      const res = await axios.post("http://localhost:8000/doctors/book", payload);
-
+      await axios.post("http://localhost:8000/doctors/book", payload);
       setConfirmation("✅ Appointment booked successfully!");
     } catch (error) {
       console.error(error);
