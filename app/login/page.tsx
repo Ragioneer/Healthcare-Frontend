@@ -1,3 +1,5 @@
+// app/login/page.tsx
+
 'use client';
 
 import { useState } from 'react';
@@ -23,11 +25,16 @@ export default function LoginPage() {
       });
 
       const { access_token } = response.data;
-
-      Cookies.set('token', access_token, { expires: 1 }); // 1 day expiry
-      router.push('/');
+      Cookies.set('token', access_token, { expires: 1 });
+      router.push('/dashboard');
     } catch (error: any) {
-      setErrorMsg(error.response?.data?.detail || 'Login failed');
+      const status = error?.response?.status;
+
+      if (status === 401) {
+        setErrorMsg('Invalid email or password. Please sign up if you don’t have an account.');
+      } else {
+        setErrorMsg('Something went wrong. Please try again later.');
+      }
     }
   };
 

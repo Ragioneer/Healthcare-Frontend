@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import axios from "axios";
-import { getUserEmailFromToken } from "@/lib/auth"; // near top
+import { getUserEmailFromToken } from '@/lib/auth'; // ✅ not "@/lib/auth" or relative
+
 
 const user_id = getUserEmailFromToken(); // before calling apiPost
 
