@@ -1,0 +1,48 @@
+name: Trigger auto deployment for healthcare-stage
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - '**'
+    - '.github/workflows/healthcare-stage-AutoDeployTrigger-bf0a5d09-ff58-451e-9fce-3828fb78d5db.yml'
+
+  # Allow manual trigger 
+  workflow_dispatch:      
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions: 
+      id-token: write #This is required for requesting the OIDC JWT Token
+      contents: read #Required when GH token is used to authenticate with private repo
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.HEALTHCARESTAGE_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.HEALTHCARESTAGE_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.HEALTHCARESTAGE_AZURE_SUBSCRIPTION_ID }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          appSourcePath: ${{ github.workspace }}"./Dockerfile"
+          _dockerfilePathKey_: _dockerfilePath_
+          registryUrl: healthecaappfrontend.azurecr.io
+          registryUsername: ${{ secrets.HEALTHCARESTAGE_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.HEALTHCARESTAGE_REGISTRY_PASSWORD }}
+          containerAppName: healthcare-stage
+          resourceGroup: dev-stage
+          imageToBuild: healthecaappfrontend.azurecr.io/healthcare-stage:${{ github.sha }}
+          _buildArgumentsKey_: |
+            _buildArgumentsValues_
+
+
