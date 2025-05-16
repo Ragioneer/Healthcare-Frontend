@@ -25,7 +25,7 @@ export default function SignupPage() {
     setStatus('⏳ Creating your account...');
 
     try {
-      const res = await axios.post('http://localhost:8000/auth/signup', {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
         email,
         password,
       });

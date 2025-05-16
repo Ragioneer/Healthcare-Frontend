@@ -31,7 +31,7 @@ export default function ReceptionPage() {
     };
 
     try {
-      await axios.post("http://localhost:8000/reception/request", payload);
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/reception/request`, payload);
       setConfirmation("✅ Your request has been sent to a receptionist.");
     } catch (err) {
       console.error(err);

@@ -30,7 +30,7 @@ export default function QuotationPage() {
     };
 
     try {
-      await axios.post("http://localhost:8000/quote/request", payload);
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/quote/request`, payload);
       setConfirmation("✅ Quotation request submitted successfully.");
     } catch (err) {
       console.error(err);

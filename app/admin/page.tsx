@@ -29,7 +29,7 @@ export default function AdminPanelPage() {
     formData.append("user_id", userId);
 
     try {
-      await axios.post("http://localhost:8000/ingest/upload", formData);
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/ingest/upload`, formData);
       setStatus("✅ Upload successful");
     } catch {
       setStatus("❌ Upload failed");
@@ -42,7 +42,7 @@ export default function AdminPanelPage() {
       formData.append("url", url);
       formData.append("user_id", userId);
 
-      await axios.post("http://localhost:8000/ingest/url", formData, {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/ingest/url`, formData, {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
       });
 
@@ -54,7 +54,7 @@ export default function AdminPanelPage() {
 
   const updateLLM = async () => {
     try {
-      await axios.put("http://localhost:8000/admin/llm", llmSettings);
+      await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/admin/llm`, llmSettings);
       setStatus("✅ LLM settings updated");
     } catch {
       setStatus("❌ Failed to update LLM settings");
@@ -63,13 +63,13 @@ export default function AdminPanelPage() {
 
   const fetchData = async (type: string) => {
     const endpointMap: Record<string, string> = {
-      files: `http://localhost:8000/ingest/file-logs?user_id=${userId}`,
-      urls: `http://localhost:8000/ingest/url-logs?user_id=${userId}`,
-      chats: "http://localhost:8000/chat/history",
-      appointments: `http://localhost:8000/doctors/appointments?user_id=${userId}`,
-      reception: `http://localhost:8000/reception/request?user_id=${userId}`,
-      exams: `http://localhost:8000/exam/schedule?user_id=${userId}`,
-      quotations: `http://localhost:8000/quote/request?user_id=${userId}`
+      files: `${process.env.NEXT_PUBLIC_API_URL}/ingest/file-logs?user_id=${userId}`,
+      urls: `${process.env.NEXT_PUBLIC_API_URL}/ingest/url-logs?user_id=${userId}`,
+      chats: `${process.env.NEXT_PUBLIC_API_URL}/chat/history`,
+      appointments: `${process.env.NEXT_PUBLIC_API_URL}/doctors/appointments?user_id=${userId}`,
+      reception: `${process.env.NEXT_PUBLIC_API_URL}/reception/request?user_id=${userId}`,
+      exams: `${process.env.NEXT_PUBLIC_API_URL}/exam/schedule?user_id=${userId}`,
+      quotations: `${process.env.NEXT_PUBLIC_API_URL}/quote/request?user_id=${userId}`
     };
 
     try {
