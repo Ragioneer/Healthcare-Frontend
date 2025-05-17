@@ -83,7 +83,9 @@ export default function AppointmentsPage() {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await axios.get<Doctor[]>(`${baseURL}/doctors`);
+        const res = await axios.get<Doctor[]>(
+          `${process.env.NEXT_PUBLIC_API_URL}/doctors`
+        );
         setDoctors(res.data);
       } catch (error) {
         setConfirmation("❌ Failed to load doctors.");
@@ -137,7 +139,10 @@ export default function AppointmentsPage() {
         notes: notes || "N/A",
       };
 
-      await axios.post(`${baseURL}/doctors/book`, payload);
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/doctors/book`,
+        payload
+      );
       setConfirmation("✅ Appointment booked successfully!");
     } catch (error) {
       console.error(error);

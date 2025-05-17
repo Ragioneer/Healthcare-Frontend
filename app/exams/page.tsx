@@ -32,7 +32,10 @@ export default function ExamPage() {
     };
 
     try {
-      await axios.post(`${baseURL}/exam/schedule`, payload);
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/exam/schedule`,
+        payload
+      );
       setConfirmation("✅ Exam successfully scheduled.");
     } catch (err) {
       console.error(err);
