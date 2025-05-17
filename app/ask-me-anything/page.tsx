@@ -8,16 +8,17 @@ import { Button } from "@/components/ui/button";
 import { useClient } from "@/context/ClientContext";
 import { getUserEmailFromToken } from "@/lib/auth";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const whatsapp_url = process.env.NEXT_PUBLIC_WHATSAPP_REDIRECT_LINK;
+const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 export interface ChatResponse {
-  reply: string;
+  data: { reply: string };
 }
 
 interface NewChatResponse {
-  conversation_id: string;
-  chat_title: string;
+  data: { conversation_id: string; chat_title: string };
 }
 
 const suggestions = [
@@ -50,17 +51,16 @@ const AskMeAnything = () => {
 
     try {
       setIsLoading(true);
-      const chatRes = await apiPost<NewChatResponse>("/chat/new", {
+      const chatRes = await axios.post(`${baseURL}/chat/new`, {
         user_id,
       });
-
       await apiPost<ChatResponse>("/chat", {
         messages: newMessages,
         user_id,
-        conversation_id: chatRes.conversation_id,
+        conversation_id: chatRes.data.conversation_id,
       });
 
-      router.push(`/ask-me-anything/${chatRes.conversation_id}`);
+      router.push(`/ask-me-anything/${chatRes.data.conversation_id}`);
     } catch (error) {
       console.error("Chat error", error);
     } finally {
