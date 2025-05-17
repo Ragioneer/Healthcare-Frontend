@@ -46,8 +46,10 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    handleFetchChatHistory();
-  }, [user_id]);
+    if (pathname === "/ask-me-anything") {
+      handleFetchChatHistory();
+    }
+  }, [user_id, pathname]);
 
   return (
     <>
