@@ -173,8 +173,8 @@ const CustomInput: FC<CustomInputProps> = ({
                 className="cursor-pointer flex items-center justify-center bg-primary text-[#DEE7EC] hover:bg-[#DEE7EC] hover:text-primary rounded-full h-[32px] w-[32px] disabled:bg-[#C9CBCF]"
                 type="button"
                 onClick={async () => {
-                  await handleSubmit(input);
                   setInput("");
+                  await handleSubmit(input);
                 }}
                 disabled={input.length === 0 || loader}
               >

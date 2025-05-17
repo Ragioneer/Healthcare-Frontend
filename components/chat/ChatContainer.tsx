@@ -74,7 +74,7 @@ const ChatContainer: FC<ChatContainerProps> = ({
 
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: res.reply },
+        { role: "assistant", content: res.data.reply },
       ]);
       setResponseLoading(true);
     } catch (error) {
