@@ -20,6 +20,15 @@ This is the frontend for the AI-powered Healthcare Assistant built with **Next.j
 ## 🐳 Run with Docker
 
 ### 1. Build & Run
+**OR**
+### Build the app
+```bash
+npm install
+npm build
+npm start
+```
+
+
 
 ```bash
 docker-compose up --build
