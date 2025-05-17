@@ -1,0 +1,50 @@
+on:
+  push:
+    branches:
+      - main  # Deploy on push to 'main' branch
+
+jobs:
+  deploy:
+    name: Deploy Healthcare app to Azure VM on main branch push
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository code from GitHub
+      - name: Checkout the code
+        uses: actions/checkout@v2
+
+      # Deploy code to EC2 via SSH
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DNS }}  # The public DNS or IP address of your Azure VM
+          username: azureuser  # The username for the Azure VM, usually 'azureuser'
+          key: ${{ secrets.AZURE_SSH_KEY }}  # The private SSH key to access your Azure VM
+          port: 22  # SSH port (default 22)
+          script: |
+            ls -a
+            cd /home/azureuser/Healthcare-Frontend
+            git pull origin main
+
+            # Ensure NVM is loaded
+            source ~/.nvm/nvm.sh
+            nvm install stable
+            nvm use stable
+            
+            # Ensure PM2 is installed globally
+            if ! command -v pm2 &> /dev/null
+            then
+              npm install pm2@latest -g
+            fi
+
+            # Install dependencies and build the Healthcare app
+            npm install --force
+            npm run build
+
+            # Stop the app if running, and restart it using PM2
+            pm2 stop healthcare-app || true 
+            pm2 start npm --name "healthcare-app" -- start
+            pm2 save
+
+            # Restart Nginx to apply any new changes
+            sudo systemctl restart nginx
