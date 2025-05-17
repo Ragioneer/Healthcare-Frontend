@@ -116,7 +116,7 @@ const SingleChat = ({
       } = await axios.get(`${baseURL}/chat/history/${params.conversation_id}`);
       console.log("res", res);
       setMessages(res?.data.messages);
-      setUserId(res?.data.user_id);
+      setUserId(res?.data?.user_id ?? "");
     } catch (error) {
       console.error("Error fetching messages:", error);
       toast.error("Error! Failed to fetch messages. Please try again.");

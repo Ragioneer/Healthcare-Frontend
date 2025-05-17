@@ -65,7 +65,7 @@ const ChatContainer: FC<ChatContainerProps> = ({
       sessionStorage.removeItem("dont_stream");
       const newMessages = [...messages, { role: "user", content: inputText }];
       setMessages(newMessages);
-
+      scrollToBottom();
       const res = await apiPost<ChatResponse>("/chat", {
         messages: newMessages,
         user_id,

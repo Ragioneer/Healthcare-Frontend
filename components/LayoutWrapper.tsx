@@ -29,24 +29,25 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
   const [chatHistory, setChatHistory] = useState<ChatHistory[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  console.log("user_id", user_id);
   const handleFetchChatHistory = async () => {
-    try {
-      setIsLoading(true);
-      const res = await axios.get(`${baseURL}/chat/conversations/${user_id}`);
+    if (user_id) {
+      try {
+        setIsLoading(true);
+        const res = await axios.get(`${baseURL}/chat/conversations/${user_id}`);
 
-      setChatHistory(res.data.data.conversations);
-    } catch (error) {
-      console.log("error", error);
-      toast.error("Error! Failed to fetch chat history. Please try again.");
-    } finally {
-      setIsLoading(false);
+        setChatHistory(res.data.data.conversations);
+      } catch (error) {
+        console.log("error", error);
+        toast.error("Error! Failed to fetch chat history. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
   useEffect(() => {
     handleFetchChatHistory();
-  }, []);
+  }, [user_id]);
 
   return (
     <>
