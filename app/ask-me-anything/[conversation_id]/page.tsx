@@ -129,7 +129,7 @@ const SingleChat = ({
     handleFetchMessages();
   }, []);
   return (
-    <div className="h-screen-minus-100 w-full flex flex-col">
+    <div className="h-screen-minus-120 md:h-screen-minus-100 w-full flex flex-col">
       <ChatContainer
         messages={messages}
         setMessages={setMessages}

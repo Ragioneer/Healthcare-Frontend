@@ -205,10 +205,12 @@ const Navbar: FC<NavbarProps> = ({ chatHistory, isLoading }) => {
                       />
                     </span>
                   ))}
-              <ChatHistoryContainer
-                chatHistory={chatHistory}
-                isLoading={isLoading}
-              />
+              {!isAdmin && (
+                <ChatHistoryContainer
+                  chatHistory={chatHistory}
+                  isLoading={isLoading}
+                />
+              )}
             </div>
           </div>
 

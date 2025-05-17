@@ -46,7 +46,7 @@ const FindASpecialist = () => {
     }
   };
   return (
-    <div className="flex items-center justify-center h-screen-minus-100">
+    <div className="flex items-center justify-center h-screen-minus-120 md:h-screen-minus-100 w-full">
       {messages.length > 1 ? (
         <SpecialistChatContainer
           messages={messages}

@@ -15,6 +15,7 @@ module.exports = {
       height: {
         "screen-minus-80": "calc(100dvh - 80px)",
         "screen-minus-100": "calc(100dvh - 100px)",
+        "screen-minus-120": "calc(100dvh - 120px)",
         "screen-minus-320": "calc(100dvh - 340px)",
       },
       colors: {

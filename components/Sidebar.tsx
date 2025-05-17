@@ -173,12 +173,14 @@ const Sidebar: FC<SidebarProps> = ({ chatHistory, isLoading }) => {
               ))}
         </nav>
 
-        <ChatHistoryContainer
-          chatHistory={chatHistory}
-          isLoading={isLoading}
-          isCollapsed={!expandSidebar}
-          setExpanded={setExpandSidebar}
-        />
+        {!isAdmin && (
+          <ChatHistoryContainer
+            chatHistory={chatHistory}
+            isLoading={isLoading}
+            isCollapsed={!expandSidebar}
+            setExpanded={setExpandSidebar}
+          />
+        )}
       </div>
     </aside>
   );
