@@ -124,7 +124,6 @@ const UploadMedicalFiles = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("res:", res);
       downloadPdfFromRawString(res.data);
       toast.success("File downloaded successfully.");
     } catch (error) {
@@ -184,7 +183,6 @@ const UploadMedicalFiles = () => {
     setIsDragging(false);
   }, []);
 
-  console.log("documentIds", documentIds);
   return (
     <div className="w-full h-full flex justify-center items-center">
       <MainCard

@@ -96,11 +96,8 @@ export default function AppointmentsPage() {
   }, []);
 
   const handleSelectDoctor = (doctor: Doctor) => {
-    console.log("doctor", doctor);
-    console.log("start");
     setCurrentlySelectedDoctor(doctor);
     setModalOpen(true);
-    console.log("end");
   };
   const handleBook = async () => {
     if (

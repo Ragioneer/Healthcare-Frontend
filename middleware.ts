@@ -19,7 +19,6 @@ export function middleware(request: NextRequest) {
   }
 
   if (client) {
-    console.log("Setting client to:", client);
     response.cookies.set("client", client, {
       httpOnly: true,
       sameSite: "lax",

@@ -45,7 +45,6 @@ const LLMSettings = () => {
           },
         }
       );
-      console.log("response", response);
       setModel(response.data.model);
     } catch (error) {
       console.log("error", error);

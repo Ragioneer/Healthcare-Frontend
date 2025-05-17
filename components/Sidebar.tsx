@@ -105,7 +105,6 @@ const Sidebar: FC<SidebarProps> = ({ chatHistory, isLoading }) => {
   const pathname = usePathname();
   const [expandSidebar, setExpandSidebar] = useState<boolean>(true);
 
-  console.log("pathname: ", pathname);
   const client = useClient();
 
   const hideSidebar =

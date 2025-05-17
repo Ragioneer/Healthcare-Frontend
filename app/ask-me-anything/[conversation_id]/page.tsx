@@ -114,7 +114,7 @@ const SingleChat = ({
           messages: { role: string; content: string; timestamp: string }[];
         };
       } = await axios.get(`${baseURL}/chat/history/${params.conversation_id}`);
-      console.log("res", res);
+
       setMessages(res?.data.messages);
       setUserId(res?.data?.user_id ?? "");
     } catch (error) {

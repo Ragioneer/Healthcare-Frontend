@@ -149,8 +149,6 @@ const CustomCalendar: FC = () => {
     });
   };
 
-  console.log("selected date:", selectedDate);
-
   return (
     <div className={`${selectedDate ? "w-full flex gap-x-4" : "w-full flex"}`}>
       <div className="w-[360px] pb-2.5">

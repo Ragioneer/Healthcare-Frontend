@@ -67,7 +67,6 @@ export default function LoginPage() {
 
       const decoded = jwtDecode<DecodedToken>(access_token);
 
-      console.log("decoded", decoded);
       if (decoded.role === "admin") {
         router.push("/admin/upload-medical-files");
       } else {

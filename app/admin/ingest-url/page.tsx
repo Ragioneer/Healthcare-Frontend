@@ -62,7 +62,6 @@ const IngestUrl = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("response", response);
       setLinks(
         response.data.data.documents.map(
           (doc: { _id: string; source: string }) => ({
