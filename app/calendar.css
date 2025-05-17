@@ -1,0 +1,62 @@
+.day-names,
+.days {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.day-name,
+.day,
+.empty-day {
+  width: 13.1%;
+  padding: 14px 10px;
+  margin: 2px;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 12px;
+  border-radius: 50%;
+}
+
+.day-name {
+  background-color: white;
+  font-size: 14px;
+  margin-top: 8px;
+  color: #13678a;
+}
+
+.empty-day {
+  background-color: #fff;
+}
+
+.not-selectable {
+  background-color: rgb(219, 219, 219);
+  color: black;
+  border-radius: 50%;
+}
+
+.not-selectable:hover {
+  cursor: not-allowed;
+}
+
+.selectable {
+  background-color: #13678a;
+  color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s all ease-in-out;
+}
+
+.selectable:hover {
+  background-color: #09a3e6;
+}
+
+.selected {
+  background-color: #09a3e6;
+  color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s all ease-in-out;
+}
+
+.selected:hover {
+  background-color: #13678a;
+}

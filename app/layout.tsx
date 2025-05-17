@@ -1,50 +1,44 @@
-// app/layout.tsx
 import "./globals.css";
 import { ReactNode } from "react";
-import Link from "next/link";
-import { headers } from "next/headers";
+import { Rubik } from "next/font/google";
+import { ClientProvider } from "../context/ClientContext";
+import { Bounce, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import LayoutWrapper from "@/components/LayoutWrapper";
+
+const rubik = Rubik({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-rubik",
+});
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  const pathname = headers().get("x-invoke-path") || "";
-
-  const hideSidebar = pathname.startsWith("/login") || pathname.startsWith("/signup");
-
+  // const client = detectClient(headersList);
+  const client = "nudii";
   return (
-    <html lang="en" className="bg-background text-foreground">
-      <body className="flex min-h-screen font-sans antialiased">
-        {/* Sidebar */}
-        {!hideSidebar && (
-          <aside className="w-64 bg-white text-gray-800 dark:bg-blue-950 dark:text-white border-r border-gray-200 dark:border-blue-800 p-6 flex flex-col gap-6">
-            <div className="text-2xl font-extrabold text-blue-600 dark:text-white">
-              MediQuick AI
-            </div>
-            <nav className="flex flex-col gap-3">
-              <SidebarLink href="/chat" label="🧠 Chat" />
-              <SidebarLink href="/appointments" label="📅 Schedule Appointment" />
-              <SidebarLink href="/reception" label="💬 Talk to Receptionist" />
-              <SidebarLink href="/exams" label="🧪 Book Lab Exam" />
-              <SidebarLink href="/quote" label="📄 Get Quotation" />
-              <SidebarLink href="/admin" label="🛠 Admin Panel" />
-            </nav>
-          </aside>
-        )}
-
-        {/* Main Content */}
-        <main className="flex-1 p-6 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white overflow-y-auto">
-          {children}
-        </main>
+    <html
+      lang="en"
+      className={`text-foreground ${rubik.variable}`}
+      data-client={client}
+    >
+      <body>
+        <ClientProvider initialClient={client}>
+          <LayoutWrapper>{children}</LayoutWrapper>
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+            transition={Bounce}
+          />
+        </ClientProvider>
       </body>
     </html>
-  );
-}
-
-function SidebarLink({ href, label }: { href: string; label: string }) {
-  return (
-    <Link
-      href={href}
-      className="px-3 py-2 rounded-md hover:bg-blue-100 dark:hover:bg-blue-800 transition text-sm font-medium"
-    >
-      {label}
-    </Link>
   );
 }

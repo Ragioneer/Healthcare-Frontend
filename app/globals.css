@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap");
 
 /* Optional plugin styles */
 @import "tw-animate-css";
@@ -13,9 +14,9 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: #13678a;
+  --secondary: #5dbfbe;
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
@@ -38,6 +39,11 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+}
+
+[data-client="nudii"] {
+  --primary: #b265d2;
+  --secondary: #ccc8ff;
 }
 
 .dark {
@@ -80,6 +86,43 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-rubik;
   }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 0px;
+  height: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgb(235, 233, 233);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: gray;
+}
+
+/*  */
+.custom-visible-scrollbar::-webkit-scrollbar {
+  width: 3px;
+}
+
+.custom-visible-scrollbar::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+.custom-visible-scrollbar::-webkit-scrollbar-thumb {
+  background: rgb(235, 233, 233);
+
+  border-radius: 10px;
+}
+
+.custom-visible-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: gray;
 }

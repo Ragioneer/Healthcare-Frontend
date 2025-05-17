@@ -1,15 +1,17 @@
-'use client';
+"use client";
 
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
+import "react-phone-number-input/style.css";
+import RPhoneInput from "react-phone-number-input";
 import axios from "axios";
-import { getUserEmailFromToken } from '@/lib/auth'; // ✅ not "@/lib/auth" or relative
-
+import { getUserEmailFromToken } from "@/lib/auth"; // ✅ not "@/lib/auth" or relative
+import MainCard from "@/components/ui/MainCard";
+import { Phone } from "lucide-react";
 
 const user_id = getUserEmailFromToken(); // before calling apiPost
+const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function ReceptionPage() {
   const [name, setName] = useState("");
@@ -31,7 +33,7 @@ export default function ReceptionPage() {
     };
 
     try {
-      await axios.post("http://localhost:8000/reception/request", payload);
+      await axios.post(`${baseURL}/reception/request`, payload);
       setConfirmation("✅ Your request has been sent to a receptionist.");
     } catch (err) {
       console.error(err);
@@ -40,52 +42,44 @@ export default function ReceptionPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white p-6 sm:p-10 flex justify-center items-start">
-      <Card className="w-full max-w-2xl p-6 sm:p-8 rounded-2xl shadow-xl bg-white">
-        <h2 className="text-2xl font-bold text-blue-700 text-center mb-6">💬 Connect to a Human Receptionist</h2>
-        <CardContent className="space-y-5">
+    <div className="h-full flex justify-center items-center px-4">
+      <MainCard
+        headerText="Connect to Receptionist"
+        headerIcon={<Phone size={20} />}
+        buttonText="Submit Your Request"
+        onSubmit={handleSubmit}
+      >
+        <div className="flex flex-col gap-y-8 p-4">
           <div>
-            <Label className="text-sm font-semibold">Purpose of Request</Label>
+            <Label>Purpose of Request</Label>
             <Input
               placeholder="e.g. Urgent help"
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="rounded-lg mt-1"
             />
           </div>
           <div>
-            <Label className="text-sm font-semibold">Phone Number</Label>
+            <Label>Full Name</Label>
             <Input
-              placeholder="+92XXXXXXXXXX"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="rounded-lg mt-1"
-            />
-          </div>
-          <div>
-            <Label className="text-sm font-semibold">Your Name</Label>
-            <Input
-              placeholder="Your full name"
-              value={name}
+              placeholder="Enter your name"
+              value={reason}
               onChange={(e) => setName(e.target.value)}
-              className="rounded-lg mt-1"
             />
           </div>
 
-          <Button
-            onClick={handleSubmit}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg mt-2"
-          >
-            Submit Request
-          </Button>
-
-          {confirmation && (
-            <div className="text-center mt-4 text-blue-700 text-sm font-medium">
-              {confirmation}
+          <div>
+            <Label>Phone Number</Label>
+            <div className="w-full relative">
+              <RPhoneInput
+                placeholder="Enter phone number"
+                value={phone}
+                onChange={(val) => setPhone(val ? val.toString() : "")}
+                className="mt-1 w-full border border-[#F5F7F9] placeholder:text-[#767676] bg-white outline-none rounded-[8px] pl-[16px] pr-[36px] py-[12px]"
+              />
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </div>
+        </div>
+      </MainCard>
     </div>
   );
 }

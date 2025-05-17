@@ -1,12 +1,22 @@
 /** @type {import('tailwindcss').Config} */
+
+const nudiiTheme = {
+  primary: "#13678a",
+};
+
+const mefIATheme = {
+  primary: "#b265d2",
+};
 module.exports = {
-  content: [
-    './app/**/*.{ts,tsx,js,jsx}',
-    './components/**/*.{ts,tsx,js,jsx}',
-  ],
-  darkMode: 'class', // 🔧 This line enables dark mode via .dark class instead of system preference
+  content: ["./app/**/*.{ts,tsx,js,jsx}", "./components/**/*.{ts,tsx,js,jsx}"],
+  darkMode: "class", // 🔧 This line enables dark mode via .dark class instead of system preference
   theme: {
     extend: {
+      height: {
+        "screen-minus-80": "calc(100dvh - 80px)",
+        "screen-minus-100": "calc(100dvh - 100px)",
+        "screen-minus-320": "calc(100dvh - 340px)",
+      },
       colors: {
         border: "var(--border)",
         input: "var(--input)",
@@ -46,6 +56,9 @@ module.exports = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      fontFamily: {
+        rubik: ["Rubik", "sans-serif"],
       },
     },
   },
