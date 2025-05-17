@@ -98,7 +98,7 @@ const AskMeAnything = () => {
               <div
                 key={index}
                 onClick={() => setSelectedSuggestion(suggestion)}
-                className="h-[40px] md:h-[96px] border border-[#EBE9FF] text-[#747474] px-[20px] py-[16px] text-[14px] flex items-center justify-center rounded-2xl shadow-[0px_4px_20px_0px_#00000033]"
+                className="h-[40px] md:h-[96px] border border-[#EBE9FF] text-[#747474] px-[20px] py-[16px] text-[14px] flex items-center justify-center cursor-pointer rounded-2xl shadow-[0px_4px_20px_0px_#00000033]"
               >
                 {suggestion}
               </div>
