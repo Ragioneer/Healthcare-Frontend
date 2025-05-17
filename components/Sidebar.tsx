@@ -198,8 +198,8 @@ export function SidebarLink({
   label: string;
   selected: boolean;
   icon: React.ReactNode;
-  expanded: boolean;
-  setExpanded: Dispatch<SetStateAction<boolean>>;
+  expanded?: boolean;
+  setExpanded?: Dispatch<SetStateAction<boolean>>;
 }) {
   const client = useClient();
 
@@ -207,7 +207,9 @@ export function SidebarLink({
     <div className="w-full relative">
       <Link
         href={href}
-        onClick={() => setExpanded(true)}
+        onClick={() => {
+          if (setExpanded) setExpanded(true);
+        }}
         className={`${expanded ? "" : "w-full"} flex items-center mr-6 ${
           label.length > 0 ? "px-5 py-2" : " justify-center py-4"
         } rounded-full gap-2 ${
