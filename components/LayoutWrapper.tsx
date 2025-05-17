@@ -14,6 +14,11 @@ const user_id = getUserEmailFromToken();
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
+export interface ChatHistory {
+  conversation_id: string;
+  chat_title: string;
+  created_at: string;
+}
 export default function LayoutWrapper({ children }: { children: ReactNode }) {
   const token = Cookies.get("token");
 
@@ -21,7 +26,7 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
   const isAuthPage = ["/login", "/signup"].includes(pathname);
   const adminHome = pathname === "/home";
 
-  // const [chatHistory, setChatHistory] = useState<ChatHistory[]>([]);
+  const [chatHistory, setChatHistory] = useState<ChatHistory[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   console.log("user_id", user_id);
@@ -29,8 +34,8 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
     try {
       setIsLoading(true);
       const res = await axios.get(`${baseURL}/chat/conversations/${user_id}`);
-      console.log("res", res);
-      // setChatHistory(res.data.data);
+
+      setChatHistory(res.data.data.conversations);
     } catch (error) {
       console.log("error", error);
       toast.error("Error! Failed to fetch chat history. Please try again.");
@@ -47,7 +52,7 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
     <>
       {!isAuthPage && (
         <div className="hidden md:block md:p-4 md:self-start md:h-[100dvh]">
-          <Sidebar />
+          <Sidebar chatHistory={chatHistory} isLoading={isLoading} />
         </div>
       )}
 
@@ -69,7 +74,7 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
 
         {!isAuthPage && (
           <header className="block w-full md:hidden">
-            <Navbar />
+            <Navbar chatHistory={chatHistory} isLoading={isLoading} />
           </header>
         )}
 

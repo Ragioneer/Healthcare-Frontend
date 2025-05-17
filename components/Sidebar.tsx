@@ -13,10 +13,16 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { FC, useState } from "react";
 import { FiCalendar, FiUsers } from "react-icons/fi";
 import { LuBeaker, LuSettings } from "react-icons/lu";
+import { ChatHistory } from "./LayoutWrapper";
+import ChatHistoryContainer from "./chat/ChatHistory";
 
+type SidebarProps = {
+  chatHistory: ChatHistory[];
+  isLoading: boolean;
+};
 // const medIASidebarItems = [
 //   {
 //     href: "/chat",
@@ -95,7 +101,7 @@ const adminSidebarItems = [
   },
 ];
 
-const Sidebar = () => {
+const Sidebar: FC<SidebarProps> = ({ chatHistory, isLoading }) => {
   const pathname = usePathname();
   const [expandSidebar, setExpandSidebar] = useState<boolean>(true);
 
@@ -141,29 +147,33 @@ const Sidebar = () => {
       >
         {expandSidebar ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
       </div>
-      <nav className="flex flex-col space-y-[16px] mt-4">
-        {isAdmin
-          ? adminItems.map((item) => (
-              <SidebarLink
-                key={item.href}
-                href={item.href}
-                label={expandSidebar ? item.label : ""}
-                selected={pathname.startsWith(item.href)}
-                icon={item.icon}
-                expanded={expandSidebar}
-              />
-            ))
-          : sidebarItems.map((item) => (
-              <SidebarLink
-                key={item.href}
-                href={item.href}
-                label={expandSidebar ? item.label : ""}
-                selected={pathname.startsWith(item.href)}
-                icon={item.icon}
-                expanded={expandSidebar}
-              />
-            ))}
-      </nav>
+      <div className="flex flex-col gap-y-8">
+        <nav className="flex flex-col space-y-[16px] mt-4">
+          {isAdmin
+            ? adminItems.map((item) => (
+                <SidebarLink
+                  key={item.href}
+                  href={item.href}
+                  label={expandSidebar ? item.label : ""}
+                  selected={pathname.startsWith(item.href)}
+                  icon={item.icon}
+                  expanded={expandSidebar}
+                />
+              ))
+            : sidebarItems.map((item) => (
+                <SidebarLink
+                  key={item.href}
+                  href={item.href}
+                  label={expandSidebar ? item.label : ""}
+                  selected={pathname.startsWith(item.href)}
+                  icon={item.icon}
+                  expanded={expandSidebar}
+                />
+              ))}
+        </nav>
+
+        <ChatHistoryContainer chatHistory={chatHistory} isLoading={isLoading} />
+      </div>
     </aside>
   );
 };

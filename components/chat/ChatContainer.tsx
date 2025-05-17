@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import { ChatResponse } from "@/app/ask-me-anything/page";
 import { apiPost } from "@/lib/api";
 import CustomMarkdown from "../CustomMarkdown";
+import Loader from "../ui/Loader";
 
 type ChatContainerProps = {
   messages: { role: string; content: string }[];
@@ -61,6 +62,7 @@ const ChatContainer: FC<ChatContainerProps> = ({
 
   const handleSubmit = async (inputText: string) => {
     try {
+      sessionStorage.removeItem("dont_stream");
       const newMessages = [...messages, { role: "user", content: inputText }];
       setMessages(newMessages);
 
@@ -92,7 +94,18 @@ const ChatContainer: FC<ChatContainerProps> = ({
     const newIndex = messages.length - 1;
     const newMessage = messages[newIndex];
 
-    if (newIndex <= lastStreamedIndex || newMessage?.role !== "assistant")
+    const dontStream = sessionStorage.getItem("dont_stream") === "true";
+
+    console.log("dont stream:", sessionStorage.getItem("dont_stream"));
+    console.log(
+      "dont stream is true:",
+      sessionStorage.getItem("dont_stream") === "true"
+    );
+    if (
+      newIndex <= lastStreamedIndex ||
+      newMessage?.role !== "assistant" ||
+      dontStream
+    )
       return;
 
     const fullText = newMessage.content;
@@ -138,6 +151,10 @@ const ChatContainer: FC<ChatContainerProps> = ({
     setLoadingText("Analyzing...");
   }, [responseLoading]);
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   return (
     <div className="h-full flex flex-col-reverse justify-center items-center xl:items-start gap-2 px-2 md:px-4 xl:px-0 xl:flex-row w-full">
       <div className="h-full flex flex-col w-full md:w-[776px] overflow-hidden">
@@ -145,7 +162,11 @@ const ChatContainer: FC<ChatContainerProps> = ({
           className="p-2 md:p-4 overflow-y-auto flex-1 custom-scrollbar"
           ref={scrollableDivRef}
         >
-          {loadingMessages && messages.length === 0 && <LoadingSpinner />}
+          {loadingMessages && messages.length === 0 && (
+            <div className="w-full flex items-center justify-center mt-4">
+              <Loader />
+            </div>
+          )}
 
           {!loadingMessages &&
             messages.map((message, index) => (
@@ -173,21 +194,6 @@ const ChatContainer: FC<ChatContainerProps> = ({
     </div>
   );
 };
-
-const LoadingSpinner = memo(() => (
-  <div role="status" className="w-full h-full flex items-center justify-center">
-    <svg
-      aria-hidden="true"
-      className="w-8 h-8 text-gray-200 animate-spin fill-blue-600"
-      viewBox="0 0 100 101"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* ... SVG path remains same ... */}
-    </svg>
-    <span className="sr-only">Loading...</span>
-  </div>
-));
 
 const MessageItem = memo(
   ({
@@ -219,13 +225,15 @@ const MessageItem = memo(
       >
         {message.role === "assistant" && (
           <div className="flex items-center gap-2">
-            <Image
-              src="/images/mefIA/mefIALogoCollapsedLogo.png"
-              alt="Assistant"
-              height={48}
-              width={48}
-              className="bg-[#EFF6FF] p-2 h-[32px] w-[32px] md:h-[48px] md:w-[48px] object-contain rounded-full mb-2"
-            />
+            <span className="bg-primary rounded-full p-2 mb-2">
+              <Image
+                src="/images/mefIA/mefIALogoCollapsedLogo.png"
+                alt="Assistant"
+                height={48}
+                width={48}
+                className="h-[32px] w-[32px] md:h-[48px] md:w-[48px] object-contain rounded-full"
+              />
+            </span>
             {isStreaming && (
               <p className="text-[12px] md:text-[16px] leading-[18px] text-[#041C3E]">
                 Answering...
@@ -236,7 +244,8 @@ const MessageItem = memo(
         <CustomMarkdown>
           {index === messagesLength - 1 &&
           index > lastStreamedIndex &&
-          message.role === "assistant"
+          message.role === "assistant" &&
+          sessionStorage.getItem("dont_stream") !== "true"
             ? streamingContent
             : message.content}
         </CustomMarkdown>

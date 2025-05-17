@@ -11,13 +11,20 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import { FiCalendar, FiUsers } from "react-icons/fi";
 import { LuBeaker, LuSettings } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
 import { SidebarLink } from "./Sidebar";
 import { CiLogout } from "react-icons/ci";
+import { ChatHistory } from "./LayoutWrapper";
+import ChatHistoryContainer from "./chat/ChatHistory";
+
+type NavbarProps = {
+  chatHistory: ChatHistory[];
+  isLoading: boolean;
+};
 
 // const medIASidebarItems = [
 //   {
@@ -93,7 +100,7 @@ const adminSidebarItems = [
   },
 ];
 
-const Navbar = () => {
+const Navbar: FC<NavbarProps> = ({ chatHistory, isLoading }) => {
   const pathname = usePathname();
   const [showSidebar, setShowSidebar] = useState<boolean>(true);
 
@@ -198,6 +205,11 @@ const Navbar = () => {
                   </span>
                 ))}
           </div>
+
+          <ChatHistoryContainer
+            chatHistory={chatHistory}
+            isLoading={isLoading}
+          />
 
           <div
             onClick={handleLogout}
