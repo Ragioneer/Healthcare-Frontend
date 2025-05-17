@@ -28,6 +28,8 @@ export default function SignupPage() {
   const [password, setPassword] = useState<string>("");
   const [diagnosis, setDiagnosis] = useState<string>("undiagnosed");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [googleLoginLoading, setGoogleLoginLoading] = useState<boolean>(false);
+
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [error, setError] = useState<{
     name: string;
@@ -83,8 +85,21 @@ export default function SignupPage() {
     }
   };
 
+  const handleLoginWithGoogle = async () => {
+    try {
+      setGoogleLoginLoading(true);
+      const response = await axios.get(`${baseURL}/login/google`);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong. Please try again later.");
+    } finally {
+      setGoogleLoginLoading(true);
+    }
+  };
+
   return (
-    <div className="h-full flex justify-center items-start px-4">
+    <div className="h-full flex justify-center items-center px-4">
       <Card
         className={`w-full max-w-[496px] ${
           client === "nudii"
@@ -252,8 +267,17 @@ export default function SignupPage() {
           <Button
             variant={"default"}
             className="w-full h-[44px] flex items-center gap-2 px-4 py-2 font-semibold"
+            onClick={handleLoginWithGoogle}
+            disabled={googleLoginLoading}
           >
-            Continue with Google <FcGoogle size={24} />
+            {googleLoginLoading ? (
+              <Loader />
+            ) : (
+              <div className="flex items-center gap-2">
+                Continue with Google
+                <FcGoogle size={24} />
+              </div>
+            )}
           </Button>
           {/* <Button
             variant={"default"}
