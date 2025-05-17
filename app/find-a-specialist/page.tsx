@@ -63,11 +63,11 @@ const FindASpecialist = () => {
                 width={48}
                 alt="logo"
               />
-              <h1 className="text-[#263238] font-semibold text-[20px] md:text-[24px] leading-[16px] md:leading-[26px] text-center mb-4">
+              <h1 className="text-[#263238] font-semibold text-[18px] md:text-[24px] leading-[26px] text-center mb-4">
                 Find a specialist
               </h1>
 
-              <p className="text-[12px] md:text-[16px] text-[#747474] text-center leading-[10px] md:leading-[20px]">
+              <p className="text-[14px] md:text-[16px] text-[#747474] text-center leading-[20px]">
                 Let our AI guide your request.
                 <br />
                 We’ll forward it to a human who can match you with the right
@@ -79,11 +79,8 @@ const FindASpecialist = () => {
               {suggestions.map((suggestion, index) => (
                 <div
                   key={index}
-                  className="h-[96px] border border-[#EBE9FF] text-[#747474] px-[20px] py-[16px] text-[10px] md:text-[14px] flex items-center justify-center rounded-2xl cursor-pointer"
-                  style={{
-                    boxShadow: "0px 4px 20px 0px #00000033",
-                  }}
                   onClick={() => setSelectedSuggestion(suggestion)}
+                  className="h-[40px] md:h-[96px] border border-[#EBE9FF] text-[#747474] px-[20px] py-[16px] text-[14px] flex items-center justify-center cursor-pointer rounded-2xl shadow-[0px_4px_20px_0px_#00000033]"
                 >
                   {suggestion}
                 </div>
