@@ -58,7 +58,9 @@ const ChatHistoryContainer = ({
                           className="w-full text-white flex items-center gap-x-2 cursor-pointer hover:scale-105 transition-transform duration-300 ease-in-out"
                         >
                           <HiBars3BottomLeft size={20} />
-                          <label>{chat.chat_title}</label>
+                          <label className="cursor-pointer">
+                            {chat.chat_title}
+                          </label>
                         </div>
                       </Link>
                     ))}

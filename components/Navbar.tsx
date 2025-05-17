@@ -181,35 +181,36 @@ const Navbar: FC<NavbarProps> = ({ chatHistory, isLoading }) => {
                 className="cursor-pointer"
               />
             </div>
-            {isAdmin
-              ? adminItems.map((item) => (
-                  <span key={item.href} onClick={() => setShowSidebar(false)}>
-                    <SidebarLink
-                      href={item.href}
-                      label={item.label}
-                      selected={pathname.startsWith(item.href)}
-                      icon={item.icon}
-                      expanded={true}
-                    />
-                  </span>
-                ))
-              : navbarItems.map((item) => (
-                  <span key={item.href} onClick={() => setShowSidebar(false)}>
-                    <SidebarLink
-                      href={item.href}
-                      label={item.label}
-                      selected={pathname.startsWith(item.href)}
-                      icon={item.icon}
-                      expanded={true}
-                    />
-                  </span>
-                ))}
+            <div className="flex flex-col gap-y-8">
+              {isAdmin
+                ? adminItems.map((item) => (
+                    <span key={item.href} onClick={() => setShowSidebar(false)}>
+                      <SidebarLink
+                        href={item.href}
+                        label={item.label}
+                        selected={pathname.startsWith(item.href)}
+                        icon={item.icon}
+                        expanded={true}
+                      />
+                    </span>
+                  ))
+                : navbarItems.map((item) => (
+                    <span key={item.href} onClick={() => setShowSidebar(false)}>
+                      <SidebarLink
+                        href={item.href}
+                        label={item.label}
+                        selected={pathname.startsWith(item.href)}
+                        icon={item.icon}
+                        expanded={true}
+                      />
+                    </span>
+                  ))}
+              <ChatHistoryContainer
+                chatHistory={chatHistory}
+                isLoading={isLoading}
+              />
+            </div>
           </div>
-
-          <ChatHistoryContainer
-            chatHistory={chatHistory}
-            isLoading={isLoading}
-          />
 
           <div
             onClick={handleLogout}
