@@ -30,7 +30,7 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleFetchChatHistory = async () => {
-    if (user_id) {
+    if (user_id && !isAuthPage) {
       try {
         setIsLoading(true);
         const res = await axios.get(`${baseURL}/chat/conversations/${user_id}`);
