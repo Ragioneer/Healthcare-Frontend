@@ -35,7 +35,7 @@ const FindASpecialist = () => {
     try {
       setIsLoading(true);
       const res: { data: { reply: string } } = await axios.post(
-        `http://localhost:8000/chat/find-specialist`,
+        `${baseURL}/chat/find-specialist`,
         input
       );
 
