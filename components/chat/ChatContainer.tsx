@@ -96,11 +96,6 @@ const ChatContainer: FC<ChatContainerProps> = ({
 
     const dontStream = sessionStorage.getItem("dont_stream") === "true";
 
-    console.log("dont stream:", sessionStorage.getItem("dont_stream"));
-    console.log(
-      "dont stream is true:",
-      sessionStorage.getItem("dont_stream") === "true"
-    );
     if (
       newIndex <= lastStreamedIndex ||
       newMessage?.role !== "assistant" ||

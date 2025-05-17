@@ -13,7 +13,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FC, useState } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import { FiCalendar, FiUsers } from "react-icons/fi";
 import { LuBeaker, LuSettings } from "react-icons/lu";
 import { ChatHistory } from "./LayoutWrapper";
@@ -158,6 +158,7 @@ const Sidebar: FC<SidebarProps> = ({ chatHistory, isLoading }) => {
                   selected={pathname.startsWith(item.href)}
                   icon={item.icon}
                   expanded={expandSidebar}
+                  setExpanded={setExpandSidebar}
                 />
               ))
             : sidebarItems.map((item) => (
@@ -168,11 +169,17 @@ const Sidebar: FC<SidebarProps> = ({ chatHistory, isLoading }) => {
                   selected={pathname.startsWith(item.href)}
                   icon={item.icon}
                   expanded={expandSidebar}
+                  setExpanded={setExpandSidebar}
                 />
               ))}
         </nav>
 
-        <ChatHistoryContainer chatHistory={chatHistory} isLoading={isLoading} />
+        <ChatHistoryContainer
+          chatHistory={chatHistory}
+          isLoading={isLoading}
+          isCollapsed={!expandSidebar}
+          setExpanded={setExpandSidebar}
+        />
       </div>
     </aside>
   );
@@ -186,12 +193,14 @@ export function SidebarLink({
   selected,
   icon,
   expanded,
+  setExpanded,
 }: {
   href: string;
   label: string;
   selected: boolean;
   icon: React.ReactNode;
   expanded: boolean;
+  setExpanded: Dispatch<SetStateAction<boolean>>;
 }) {
   const client = useClient();
 
@@ -199,6 +208,7 @@ export function SidebarLink({
     <div className="w-full relative">
       <Link
         href={href}
+        onClick={() => setExpanded(true)}
         className={`${expanded ? "" : "w-full"} flex items-center mr-6 ${
           label.length > 0 ? "px-5 py-2" : " justify-center py-4"
         } rounded-full gap-2 ${

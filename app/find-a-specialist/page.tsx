@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { getUserEmailFromToken } from "@/lib/auth";
 import CustomInput from "@/components/chat/CustomInput";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -22,8 +21,7 @@ const FindASpecialist = () => {
     []
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const user_id = getUserEmailFromToken();
+  const [selectedSuggestion, setSelectedSuggestion] = useState<string>("");
 
   const handleSend = async (input: string) => {
     if (!input.trim()) return;
@@ -31,15 +29,12 @@ const FindASpecialist = () => {
     const newMessages = [...messages, { role: "user", content: input }];
     setMessages(newMessages);
 
-    console.log("base url:", baseURL);
     try {
       setIsLoading(true);
       const res: { data: { reply: string } } = await axios.post(
         `${baseURL}/chat/find-specialist`,
         input
       );
-
-      console.log("res:", res);
       setMessages([
         ...newMessages,
         { role: "assistant", content: res?.data.reply },
@@ -51,12 +46,12 @@ const FindASpecialist = () => {
     }
   };
   return (
-    <div className="flex items-center justify-center h-full">
+    <div className="flex items-center justify-center h-screen-minus-100">
       {messages.length > 1 ? (
         <SpecialistChatContainer
           messages={messages}
+          setMessages={setMessages}
           loadingMessages={isLoading}
-          handleSubmit={handleSend}
         />
       ) : (
         <div className="h-full w-full max-w-[624px] flex flex-col items-center justify-center space-y-16">
@@ -84,10 +79,11 @@ const FindASpecialist = () => {
               {suggestions.map((suggestion, index) => (
                 <div
                   key={index}
-                  className="h-[96px] border border-[#EBE9FF] text-[#747474] px-[20px] py-[16px] text-[10px] md:text-[14px] flex items-center justify-center rounded-2xl"
+                  className="h-[96px] border border-[#EBE9FF] text-[#747474] px-[20px] py-[16px] text-[10px] md:text-[14px] flex items-center justify-center rounded-2xl cursor-pointer"
                   style={{
                     boxShadow: "0px 4px 20px 0px #00000033",
                   }}
+                  onClick={() => setSelectedSuggestion(suggestion)}
                 >
                   {suggestion}
                 </div>
@@ -96,7 +92,11 @@ const FindASpecialist = () => {
           </div>
 
           <div className="w-full flex flex-col items-center justify-center">
-            <CustomInput handleSubmit={handleSend} loader={isLoading} />
+            <CustomInput
+              handleSubmit={handleSend}
+              loader={isLoading}
+              selectedSuggestion={selectedSuggestion}
+            />
 
             <Button
               variant={"default"}

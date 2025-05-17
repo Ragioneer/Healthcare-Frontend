@@ -1,25 +1,40 @@
-import { FC, useCallback, useEffect, useRef, useState, memo } from "react";
+import {
+  FC,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  memo,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import CustomInput from "../chat/CustomInput";
 import Image from "next/image";
 import CustomMarkdown from "../CustomMarkdown";
+import axios from "axios";
+import Loader from "../ui/Loader";
+
+const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 type SpecialistChatContainerProps = {
   messages: { role: string; content: string }[];
-
+  setMessages: Dispatch<SetStateAction<{ role: string; content: string }[]>>;
   loadingMessages: boolean;
-  handleSubmit: (inputText: string) => void;
 };
 
 const SpecialistChatContainer: FC<SpecialistChatContainerProps> = ({
   messages,
+  setMessages,
   loadingMessages,
-  handleSubmit,
 }) => {
   const scrollableDivRef = useRef<HTMLDivElement | null>(null);
   const [streamingContent, setStreamingContent] = useState<string>("");
   const [lastStreamedIndex, setLastStreamedIndex] = useState<number>(-1);
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
-  const [loadingText, setLoadingText] = useState<string>("Analyzing...");
+  const [loadingText, setLoadingText] = useState<string>(
+    "Reviewing your symptoms..."
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const isUserAtBottom = useCallback(() => {
     if (!scrollableDivRef.current) return true;
@@ -35,6 +50,29 @@ const SpecialistChatContainer: FC<SpecialistChatContainerProps> = ({
       });
     }
   }, [isUserAtBottom]);
+
+  const handleSend = async (input: string) => {
+    if (!input.trim()) return;
+
+    const newMessages = [...messages, { role: "user", content: input }];
+    setMessages(newMessages);
+
+    try {
+      setIsLoading(true);
+      const res: { data: { reply: string } } = await axios.post(
+        `${baseURL}/chat/find-specialist`,
+        input
+      );
+      setMessages([
+        ...newMessages,
+        { role: "assistant", content: res?.data.reply },
+      ]);
+    } catch (error) {
+      console.error("Chat error", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Scroll handling
   useEffect(() => {
@@ -83,14 +121,14 @@ const SpecialistChatContainer: FC<SpecialistChatContainerProps> = ({
 
   // Loading text animation
   useEffect(() => {
-    if (loadingMessages) {
+    if (isLoading) {
       const timer = setTimeout(() => {
         setLoadingText("Reviewing your symptoms...");
       }, 2000);
       return () => clearTimeout(timer);
     }
     setLoadingText("Matching you with a specialist...");
-  }, [loadingMessages]);
+  }, [isLoading]);
 
   return (
     <div className="h-full flex flex-col-reverse justify-center items-center xl:items-start gap-2 px-2 md:px-4 xl:px-0 xl:flex-row w-full">
@@ -111,14 +149,18 @@ const SpecialistChatContainer: FC<SpecialistChatContainerProps> = ({
                 lastStreamedIndex={lastStreamedIndex}
                 streamingContent={streamingContent}
                 isStreaming={isStreaming}
+                loadingText={loadingText}
               />
             ))}
 
-          {loadingMessages && <LoadingIndicator loadingText={loadingText} />}
+          {isLoading && <LoadingIndicator loadingText={loadingText} />}
         </div>
 
         <div className="justify-self-end">
-          <CustomInput handleSubmit={handleSubmit} loader={loadingMessages} />
+          <CustomInput
+            handleSubmit={handleSend}
+            loader={loadingMessages || isLoading}
+          />
         </div>
       </div>
     </div>
@@ -127,16 +169,7 @@ const SpecialistChatContainer: FC<SpecialistChatContainerProps> = ({
 
 const LoadingSpinner = memo(() => (
   <div role="status" className="w-full h-full flex items-center justify-center">
-    <svg
-      aria-hidden="true"
-      className="w-8 h-8 text-gray-200 animate-spin fill-blue-600"
-      viewBox="0 0 100 101"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* ... SVG path remains same ... */}
-    </svg>
-    <span className="sr-only">Loading...</span>
+    <Loader />
   </div>
 ));
 
@@ -148,6 +181,7 @@ const MessageItem = memo(
     lastStreamedIndex,
     streamingContent,
     isStreaming,
+    loadingText,
   }: {
     message: { role: string; content: string };
     index: number;
@@ -155,6 +189,7 @@ const MessageItem = memo(
     lastStreamedIndex: number;
     streamingContent: string;
     isStreaming: boolean;
+    loadingText: string;
   }) => (
     <div
       className={`flex mb-4 ${
@@ -181,7 +216,7 @@ const MessageItem = memo(
             </span>
             {isStreaming && (
               <p className="text-[12px] md:text-[16px] leading-[18px] text-[#041C3E]">
-                Answering...
+                {loadingText}
               </p>
             )}
           </div>
@@ -200,13 +235,15 @@ const MessageItem = memo(
 
 const LoadingIndicator = memo(({ loadingText }: { loadingText: string }) => (
   <div className="flex items-center gap-2">
-    <Image
-      src="/images/mefIA/lefIALogoCollapsedLogo.png"
-      alt="Loading"
-      height={48}
-      width={48}
-      className="bg-[#EAF4FE] p-2 h-[32px] w-[32px] md:h-[48px] md:w-[48px] object-contain rounded-full mb-2 animate-pulse"
-    />
+    <span className="bg-primary rounded-full p-2 mb-2">
+      <Image
+        src="/images/mefIA/mefIALogoCollapsedLogo.png"
+        alt="Assistant"
+        height={48}
+        width={48}
+        className="h-[32px] w-[32px] md:h-[48px] md:w-[48px] object-contain rounded-full"
+      />
+    </span>
     <p className="text-[12px] md:text-[16px] leading-[18px] text-[#041C3E]">
       {loadingText}
     </p>
