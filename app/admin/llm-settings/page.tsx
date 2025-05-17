@@ -45,7 +45,7 @@ const LLMSettings = () => {
           },
         }
       );
-      setModel(response.data.model);
+      toast.success("LLM Settings Updated!");
     } catch (error) {
       console.log("error", error);
       toast.error("Error! Failed to fetch URL. Please try again.");

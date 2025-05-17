@@ -45,6 +45,7 @@ const IngestUrl = () => {
         ...prev,
         { id: res.data.data.document_id, url: res.data.data.url },
       ]);
+      toast.success("URL uploaded successfully.");
       setLink("");
     } catch (error) {
       console.log("error", error);
