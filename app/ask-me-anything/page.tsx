@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { apiPost } from "@/lib/api";
 import CustomInput from "@/components/chat/CustomInput";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -51,16 +50,16 @@ const AskMeAnything = () => {
 
     try {
       setIsLoading(true);
-      const chatRes = await axios.post(`${baseURL}/chat/new`, {
+      const chatRes: NewChatResponse = await axios.post(`${baseURL}/chat/new`, {
         user_id,
       });
-      await apiPost<ChatResponse>("/chat", {
+      await axios.post(`${baseURL}/chat`, {
         messages: newMessages,
         user_id,
-        conversation_id: chatRes.data.conversation_id,
+        conversation_id: chatRes?.data?.conversation_id,
       });
 
-      router.push(`/ask-me-anything/${chatRes.data.conversation_id}`);
+      router.push(`/ask-me-anything/${chatRes?.data?.conversation_id}`);
     } catch (error) {
       console.error("Chat error", error);
     } finally {

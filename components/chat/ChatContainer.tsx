@@ -12,9 +12,11 @@ import CustomInput from "./CustomInput";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import { ChatResponse } from "@/app/ask-me-anything/page";
-import { apiPost } from "@/lib/api";
 import CustomMarkdown from "../CustomMarkdown";
 import Loader from "../ui/Loader";
+import axios from "axios";
+
+const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 type ChatContainerProps = {
   messages: { role: string; content: string }[];
@@ -66,7 +68,7 @@ const ChatContainer: FC<ChatContainerProps> = ({
       const newMessages = [...messages, { role: "user", content: inputText }];
       setMessages(newMessages);
       scrollToBottom();
-      const res = await apiPost<ChatResponse>("/chat", {
+      const res: ChatResponse = await axios.post(`${baseURL}/chat`, {
         messages: newMessages,
         user_id,
         conversation_id,
@@ -74,7 +76,7 @@ const ChatContainer: FC<ChatContainerProps> = ({
 
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: res.data.reply },
+        { role: "assistant", content: res?.data?.reply },
       ]);
       setResponseLoading(true);
     } catch (error) {
