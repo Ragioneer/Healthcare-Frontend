@@ -116,61 +116,70 @@ export default function LoginPage() {
           width={232}
           height={95}
           alt="logo"
+          priority
         />
-        <CardContent className="space-y-5 w-full">
-          <div className="w-full">
-            <Label>Email</Label>
-            <div className="w-full relative">
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <span className="absolute right-2 cursor-pointer text-[#767676] top-4">
-                <Mail />
-              </span>
-            </div>
-            {errors.email && (
-              <p className="text-sm text-red-500 mt-1">{errors.email}</p>
-            )}
-          </div>
-
-          <div>
-            <Label>Password</Label>
-            <div className="w-full relative">
-              <Input
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <span
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-2 cursor-pointer text-[#767676] top-4"
-              >
-                {showPassword ? <EyeClosed /> : <Eye />}
-              </span>
-            </div>
-            {errors.password && (
-              <p className="text-sm text-red-500 mt-1">{errors.password}</p>
-            )}
-          </div>
-
-          <Button
-            onClick={handleLogin}
-            variant={"default"}
-            className="w-full h-[44px] px-4 py-2 font-semibold"
-            disabled={isLoading}
+        <CardContent className=" w-full">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleLogin();
+            }}
+            className="space-y-5 w-full"
           >
-            {isLoading ? (
-              <Loader />
-            ) : (
-              <>
-                Login <ArrowRight />
-              </>
-            )}
-          </Button>
+            <div className="w-full">
+              <Label>Email</Label>
+              <div className="w-full relative">
+                <Input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <span className="absolute right-2 cursor-pointer text-[#767676] top-4">
+                  <Mail />
+                </span>
+              </div>
+              {errors.email && (
+                <p className="text-sm text-red-500 mt-1">{errors.email}</p>
+              )}
+            </div>
+
+            <div>
+              <Label>Password</Label>
+              <div className="w-full relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <span
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-2 cursor-pointer text-[#767676] top-4"
+                >
+                  {showPassword ? <EyeClosed /> : <Eye />}
+                </span>
+              </div>
+              {errors.password && (
+                <p className="text-sm text-red-500 mt-1">{errors.password}</p>
+              )}
+            </div>
+
+            <Button
+              variant={"default"}
+              type="submit"
+              className="w-full h-[44px] px-4 py-2 font-semibold"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <Loader />
+              ) : (
+                <>
+                  Login <ArrowRight />
+                </>
+              )}
+            </Button>
+          </form>
 
           <div
             className={`w-full relative border ${

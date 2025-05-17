@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import {
   FaFile,
   FaFileAlt,
@@ -27,6 +27,8 @@ const CustomInput: FC<CustomInputProps> = ({
   const [input, setInput] = useState<string>("");
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
+
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const removeFile = () => {
     setUploadedFile(null);
@@ -71,10 +73,14 @@ const CustomInput: FC<CustomInputProps> = ({
   };
 
   useEffect(() => {
-    if (selectedSuggestion) {
+    if (selectedSuggestion && inputRef.current) {
       setInput(selectedSuggestion);
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 10);
     }
   }, [selectedSuggestion]);
+
   return (
     <div
       className="flex flex-col items-center w-full relative rounded-[24px]"
@@ -127,6 +133,7 @@ const CustomInput: FC<CustomInputProps> = ({
         <textarea
           placeholder={"Enter a prompt for mef IA."}
           value={input}
+          ref={inputRef}
           onChange={(e) => {
             setInput(e.target.value);
           }}

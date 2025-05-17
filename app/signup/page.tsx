@@ -112,143 +112,151 @@ export default function SignupPage() {
           width={232}
           height={95}
           alt="logo"
+          priority
         />
-        <CardContent className="space-y-5 w-full">
-          <div className="w-full">
-            <Label>Full Name</Label>
-            <Input
-              type="text"
-              placeholder="Enter your name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className={error.name ? "border-red-500" : ""}
-            />
-            {error.name && (
-              <p className="text-red-500 text-sm mt-1">{error.name}</p>
-            )}
-          </div>
-
-          <div className="w-full">
-            <Label>Email</Label>
-            <div className="w-full relative">
+        <CardContent className="w-full">
+          <form
+            className="space-y-5 w-full"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSignup();
+            }}
+          >
+            <div className="w-full">
+              <Label>Full Name</Label>
               <Input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className={error.email ? "border-red-500" : ""}
+                type="text"
+                placeholder="Enter your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className={error.name ? "border-red-500" : ""}
               />
-              <span className="absolute right-2 cursor-pointer text-[#767676] top-4">
-                <Mail />
-              </span>
+              {error.name && (
+                <p className="text-red-500 text-sm mt-1">{error.name}</p>
+              )}
             </div>
-            {error.email && (
-              <p className="text-red-500 text-sm mt-1">{error.email}</p>
-            )}
-          </div>
 
-          <div className="w-full">
-            <Label>Phone Number</Label>
-            <div className="w-full relative">
-              {/* <Input
+            <div className="w-full">
+              <Label>Email</Label>
+              <div className="w-full relative">
+                <Input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={error.email ? "border-red-500" : ""}
+                />
+                <span className="absolute right-2 cursor-pointer text-[#767676] top-4">
+                  <Mail />
+                </span>
+              </div>
+              {error.email && (
+                <p className="text-red-500 text-sm mt-1">{error.email}</p>
+              )}
+            </div>
+
+            <div className="w-full">
+              <Label>Phone Number</Label>
+              <div className="w-full relative">
+                {/* <Input
                 type="tel"
                 placeholder="000-0000000"
                 value={phoneNo}
                 onChange={(e) => setPhoneNo(e.target.value)}
                 className={error.phoneNo ? "border-red-500" : ""}
               /> */}
-              <PhoneInput
-                phoneNo={phoneNo}
-                setPhoneNo={setPhoneNo}
-                error={error.phoneNo}
-              />
-              <span className="absolute right-2 cursor-pointer text-[#767676] top-4">
-                <Phone />
-              </span>
+                <PhoneInput
+                  phoneNo={phoneNo}
+                  setPhoneNo={setPhoneNo}
+                  error={error.phoneNo}
+                />
+                <span className="absolute right-2 cursor-pointer text-[#767676] top-4">
+                  <Phone />
+                </span>
+              </div>
+              {error.phoneNo && (
+                <p className="text-red-500 text-sm mt-1">{error.phoneNo}</p>
+              )}
             </div>
-            {error.phoneNo && (
-              <p className="text-red-500 text-sm mt-1">{error.phoneNo}</p>
-            )}
-          </div>
 
-          <div className="w-full">
-            <Label>Password</Label>
-            <div className="w-full relative">
-              <Input
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={error.password ? "border-red-500" : ""}
-              />
-              <span
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-2 cursor-pointer text-[#767676] top-4"
+            <div className="w-full">
+              <Label>Password</Label>
+              <div className="w-full relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={error.password ? "border-red-500" : ""}
+                />
+                <span
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-2 cursor-pointer text-[#767676] top-4"
+                >
+                  {showPassword ? <EyeClosed /> : <Eye />}
+                </span>
+              </div>
+              {error.password && (
+                <p className="text-red-500 text-sm mt-1">{error.password}</p>
+              )}
+            </div>
+
+            <div>
+              <Label
+                className={client === "nudii" ? "text-white" : "text-[#242424]"}
               >
-                {showPassword ? <EyeClosed /> : <Eye />}
-              </span>
+                Diagnosis?
+              </Label>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+                {[
+                  {
+                    label: "Crohn's Disease",
+                    value: "crohn",
+                    id: "crohn-disease",
+                  },
+                  {
+                    label: "Ulcerative Colitis",
+                    value: "ulcerative",
+                    id: "ulcerative-colitis",
+                  },
+                  {
+                    label: "Not diagnosed yet",
+                    value: "undiagnosed",
+                    id: "not-diagnosed-yet",
+                  },
+                ].map(({ label, value, id }) => (
+                  <div className="flex items-center gap-2" key={id}>
+                    <input
+                      id={id}
+                      type="radio"
+                      value={value}
+                      name="diagnosis"
+                      className="w-4 h-4 accent-primary cursor-pointer"
+                      checked={diagnosis === value}
+                      onChange={(e) => setDiagnosis(e.target.value)}
+                    />
+                    <label
+                      htmlFor={id}
+                      className={`text-[10px] cursor-pointer ${
+                        client === "nudii" ? "text-white" : "text-[#242424]"
+                      } md:text-[14px]`}
+                    >
+                      {label}
+                    </label>
+                  </div>
+                ))}
+              </div>
             </div>
-            {error.password && (
-              <p className="text-red-500 text-sm mt-1">{error.password}</p>
-            )}
-          </div>
 
-          <div>
-            <Label
-              className={client === "nudii" ? "text-white" : "text-[#242424]"}
+            <Button
+              type="submit"
+              variant={"default"}
+              className="w-full h-[44px] px-4 py-2 font-semibold"
+              disabled={isLoading}
             >
-              Diagnosis?
-            </Label>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-              {[
-                {
-                  label: "Crohn's Disease",
-                  value: "crohn",
-                  id: "crohn-disease",
-                },
-                {
-                  label: "Ulcerative Colitis",
-                  value: "ulcerative",
-                  id: "ulcerative-colitis",
-                },
-                {
-                  label: "Not diagnosed yet",
-                  value: "undiagnosed",
-                  id: "not-diagnosed-yet",
-                },
-              ].map(({ label, value, id }) => (
-                <div className="flex items-center gap-2" key={id}>
-                  <input
-                    id={id}
-                    type="radio"
-                    value={value}
-                    name="diagnosis"
-                    className="w-4 h-4 accent-primary cursor-pointer"
-                    checked={diagnosis === value}
-                    onChange={(e) => setDiagnosis(e.target.value)}
-                  />
-                  <label
-                    htmlFor={id}
-                    className={`text-[10px] cursor-pointer ${
-                      client === "nudii" ? "text-white" : "text-[#242424]"
-                    } md:text-[14px]`}
-                  >
-                    {label}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <Button
-            onClick={handleSignup}
-            variant={"default"}
-            className="w-full h-[44px] px-4 py-2 font-semibold"
-            disabled={isLoading}
-          >
-            {isLoading ? <Loader /> : "Signup"}
-          </Button>
-
+              {isLoading ? <Loader /> : "Signup"}
+            </Button>
+          </form>
           <div
             className={`w-full relative border ${
               client === "nudii" ? "border-white" : "border-[#767676]"
