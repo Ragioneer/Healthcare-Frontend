@@ -126,3 +126,7 @@
 .custom-visible-scrollbar::-webkit-scrollbar-thumb:hover {
   background: gray;
 }
+
+input {
+  outline: none;
+}

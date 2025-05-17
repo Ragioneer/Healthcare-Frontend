@@ -17,6 +17,7 @@ import { FcGoogle } from "react-icons/fc";
 import { BsApple } from "react-icons/bs";
 import Loader from "@/components/ui/Loader";
 import { DecodedToken } from "@/lib/auth";
+import { toast } from "react-toastify";
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -26,6 +27,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [googleLoginLoading, setGoogleLoginLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
   );
@@ -84,6 +86,19 @@ export default function LoginPage() {
       }
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleLoginWithGoogle = async () => {
+    try {
+      setGoogleLoginLoading(true);
+      const response = await axios.get(`${baseURL}/login/google`);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong. Please try again later.");
+    } finally {
+      setGoogleLoginLoading(true);
     }
   };
 
@@ -175,16 +190,25 @@ export default function LoginPage() {
           <Button
             variant={"default"}
             className="w-full h-[44px] flex items-center gap-2 px-4 py-2 font-semibold"
+            onClick={handleLoginWithGoogle}
+            disabled={googleLoginLoading}
           >
-            Continue with Google <FcGoogle size={24} />
+            {googleLoginLoading ? (
+              <Loader />
+            ) : (
+              <div className="flex items-center gap-2">
+                Continue with Google
+                <FcGoogle size={24} />
+              </div>
+            )}
           </Button>
 
-          <Button
+          {/* <Button
             variant={"default"}
             className="w-full h-[44px] flex items-center gap-2 px-4 py-2 font-semibold"
           >
             Continue with Apple <BsApple size={24} color="#000" />
-          </Button>
+          </Button> */}
 
           <div className="w-full flex items-center justify-center mt-4 gap-[2px]">
             <h2

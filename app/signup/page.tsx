@@ -15,6 +15,7 @@ import { BsApple } from "react-icons/bs";
 import { useClient } from "@/context/ClientContext";
 import Loader from "@/components/ui/Loader";
 import { toast } from "react-toastify";
+import PhoneInput from "@/components/ui/PhoneInput";
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -43,16 +44,13 @@ export default function SignupPage() {
   const validateName = (value: string) => value.trim() !== "";
   const validateEmail = (value: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-  const validatePhone = (value: string) => /^\d{3}-\d{7}$/.test(value);
   const validatePassword = (value: string) => value.length >= 6;
 
   const handleSignup = async () => {
     const newErrors = {
       name: validateName(name) ? "" : "Name is required",
       email: validateEmail(email) ? "" : "Invalid email address",
-      phoneNo: validatePhone(phoneNo)
-        ? ""
-        : "Phone number must be in the format 000-0000000",
+      phoneNo: phoneNo.length === 0 ? "Phone number is required" : "",
       password: validatePassword(password)
         ? ""
         : "Password must be at least 6 characters",
@@ -137,12 +135,17 @@ export default function SignupPage() {
           <div className="w-full">
             <Label>Phone Number</Label>
             <div className="w-full relative">
-              <Input
+              {/* <Input
                 type="tel"
                 placeholder="000-0000000"
                 value={phoneNo}
                 onChange={(e) => setPhoneNo(e.target.value)}
                 className={error.phoneNo ? "border-red-500" : ""}
+              /> */}
+              <PhoneInput
+                phoneNo={phoneNo}
+                setPhoneNo={setPhoneNo}
+                error={error.phoneNo}
               />
               <span className="absolute right-2 cursor-pointer text-[#767676] top-4">
                 <Phone />
@@ -252,12 +255,12 @@ export default function SignupPage() {
           >
             Continue with Google <FcGoogle size={24} />
           </Button>
-          <Button
+          {/* <Button
             variant={"default"}
             className="w-full h-[44px] flex items-center gap-2 px-4 py-2 font-semibold"
           >
             Continue with Apple <BsApple size={24} color="#000" />
-          </Button>
+          </Button> */}
 
           <div className="w-full flex items-center justify-center mt-8 gap-[2px]">
             <h2
